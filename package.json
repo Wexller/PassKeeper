@@ -1,0 +1,26 @@
+{
+  "name": "passkeeper",
+  "version": "1.0.0",
+  "description": "Password Keeper on MERN stack",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "server": "nodemon app.js"
+  },
+  "keywords": [
+    "pasword",
+    "keeper",
+    "mern"
+  ],
+  "author": "Maxim Davydov <maxim.davydov.94@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "config": "^3.3.1",
+    "express": "^4.17.1",
+    "mongoose": "^5.9.19"
+  },
+  "devDependencies": {
+    "concurrently": "^5.2.0",
+    "nodemon": "^2.0.4"
+  }
+}
