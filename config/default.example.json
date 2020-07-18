@@ -1,0 +1,5 @@
+{
+  "port": 5000,
+  "jwtSecret": "random secret key",
+  "mongoUri": "mongodb+srv://mongo_url"
+}
