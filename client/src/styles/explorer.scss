@@ -1,0 +1,34 @@
+.explorer {
+  flex: 0 0 25%;
+  border-right: 1px solid #bdbdbd;
+}
+
+.select-dropdown {
+  overflow-y: auto !important;
+  max-height: 200px;
+}
+
+.custom-switcher {
+  background-color: #84c7c1 !important;
+
+  &:before {
+    background-color: rgba(38, 166, 154, 0.15) !important;
+  }
+
+  &:after {
+    background-color: #26a69a !important;
+  }
+}
+
+.closeModal {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.modalTitle {
+  font-weight: bold;
+  font-size: 1.25rem;
+  margin-bottom: 2.5rem;
+}

@@ -1,0 +1,13 @@
+.body {
+  background-color: #f5f5f5;
+  min-height: 80vh;
+  border-radius: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+
+  display: flex;
+}
+
+.data {
+  flex: 0 0 75%;
+}
