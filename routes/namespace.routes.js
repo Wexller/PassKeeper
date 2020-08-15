@@ -4,11 +4,10 @@ const {Router} = require('express')
 const {check, validationResult} = require('express-validator')
 const Namespace = require('../models/Namespace')
 const Project = require('../models/Project')
+const Case = require('../models/Case')
 const router = Router()
 
-/**
- * /api/namespace/
- */
+// GET /api/namespace
 router.get('/', async (req, res) => {
   try {
     const namespaces = await Namespace.find()
@@ -53,10 +52,8 @@ router.get('/', async (req, res) => {
   }
 })
 
-/**
- * /api/namespace/new
- */
-router.post('/new', [
+// POST /api/namespace
+router.post('/', [
   check('name').exists()
 ], async (req, res) => {
   try {
@@ -87,17 +84,24 @@ router.post('/new', [
   }
 })
 
-/**
- * /api/namespace/remove
- */
-router.post('/remove', async (req, res) => {
+// DELETE /api/namespace/:id
+router.delete('/:id', async (req, res) => {
   try {
-    if (!req.body.id) {
+    const {id} = req.params
+    if (!id) {
       return res.status(400).json({ message: 'Не выбрано объединение' })
     }
-    await Namespace.findOneAndDelete({ _id: req.body.id}, async err => {
+    await Namespace.findOneAndDelete({ _id: id}, async err => {
       if (!err) {
-        await Project.deleteMany({namespace: req.body.id})
+        const projects = await Project.find({namespace: id})
+
+        const arProjectIds = []
+        for (const project of projects) {
+          arProjectIds.push(project._id)
+        }
+
+        await Project.deleteMany({namespace: id})
+        await Case.deleteMany({project: {'$in': arProjectIds}})
         res.status(200).json({ message: 'Объединение удалено' })
       } else {
         res.status(400).json({ message: `Произошла ошибка ${err}` })

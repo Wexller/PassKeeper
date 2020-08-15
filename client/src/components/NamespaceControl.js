@@ -1,20 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import Modal from 'react-modal'
+import Modal from 'react-modal';
 import {useMessage} from '../hooks/message.hook';
 import {useHttp} from '../hooks/http.hook';
-
-const customStyles = {
-  content: {
-    top          : '50%',
-    left         : '50%',
-    right        : 'auto',
-    bottom       : 'auto',
-    marginRight  : '-50%',
-    transform    : 'translate(-50%, -50%)',
-    minWidth     : '500px',
-    minHeight    : '300px',
-  }
-};
+import {modalStyles} from '../constants';
 
 function NamespaceControl({updateList, namespaces, contentLoading}) {
   const {loading, request, error, clearError} = useHttp()
@@ -29,7 +17,7 @@ function NamespaceControl({updateList, namespaces, contentLoading}) {
   const [displayAddForm, setDisplayAddForm] = useState(true)
 
   const [namespaceAddName, setNamespaceAddName] = useState('')
-  const [namespaceRemoveName, setNamespaceRemoveName] = useState('')
+  const [namespaceRemoveId, setNamespaceRemoveId] = useState('')
 
   function getModalContent() {
     return (
@@ -47,7 +35,6 @@ function NamespaceControl({updateList, namespaces, contentLoading}) {
         <div className="row valign-wrapper">
           <div className="input-field col s8">
             <input
-              id="namespace-name"
               name="name"
               type="text"
               placeholder="Название объединения"
@@ -78,8 +65,8 @@ function NamespaceControl({updateList, namespaces, contentLoading}) {
               style={{height: '54px'}}
               className="browser-default"
               name="id"
-              value={namespaceRemoveName}
-              onChange={event => setNamespaceRemoveName(event.target.value)}
+              value={namespaceRemoveId}
+              onChange={event => setNamespaceRemoveId(event.target.value)}
             >
               <option
                 value=""
@@ -99,7 +86,7 @@ function NamespaceControl({updateList, namespaces, contentLoading}) {
   async function addNewNamespace(event) {
     event.preventDefault()
     try {
-      const data = await request('http://localhost:5000/api/namespace/new', 'POST', {name: namespaceAddName})
+      const data = await request('http://localhost:5000/api/namespace/', 'POST', {name: namespaceAddName})
       message(data.message)
       setNamespaceAddName('')
       updateList()
@@ -109,9 +96,9 @@ function NamespaceControl({updateList, namespaces, contentLoading}) {
   async function removeNamespace(event) {
     event.preventDefault()
     try {
-      const data = await request('http://localhost:5000/api/namespace/remove', 'POST', {id: namespaceRemoveName})
+      const data = await request(`http://localhost:5000/api/namespace/${namespaceRemoveId}`, 'DELETE')
       message(data.message)
-      setNamespaceRemoveName('')
+      setNamespaceRemoveId('')
       updateList()
     } catch (e) {}
   }
@@ -125,11 +112,6 @@ function NamespaceControl({updateList, namespaces, contentLoading}) {
     setModalIsOpen(false)
   }
 
-  function afterOpenModal() {
-    // references are now sync'd and can be accessed.
-    // subtitle.style.color = '#f00';
-  }
-
   function toggleDisplayedForm() {
     setDisplayAddForm(!displayAddForm)
   }
@@ -139,10 +121,9 @@ function NamespaceControl({updateList, namespaces, contentLoading}) {
       <button className="btn col s6" onClick={openModal} disabled={contentLoading}>Объединения</button>
       <Modal
         isOpen={modalIsOpen}
-        onAfterOpen={afterOpenModal}
         onRequestClose={closeModal}
-        style={customStyles}
-        contentLabel="Example Modal"
+        style={modalStyles}
+        contentLabel="Управление объединениями"
       >
         <div className="modalTitle">Управление объединениями</div>
         <div style={{margin: '1rem 0'}}>

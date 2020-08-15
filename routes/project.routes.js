@@ -5,9 +5,7 @@ const {check, validationResult} = require('express-validator')
 const Project = require('../models/Project')
 const Namespace = require('../models/Namespace')
 
-/**
- * /api/project
- */
+// GET /api/project
 router.get('/', async (req, res) => {
   try {
     const projects = await Project.find()
@@ -18,10 +16,8 @@ router.get('/', async (req, res) => {
   }
 })
 
-/**
- * /api/project/new
- */
-router.post('/new', [
+// POST /api/project
+router.post('/', [
   check('projectName').exists(),
   check('namespaceId').exists()
 ], async (req, res) => {
@@ -61,28 +57,26 @@ router.post('/new', [
   }
 })
 
-/**
- * /api/project/remove
- */
-router.post('/remove', async (req, res) => {
+// DELETE /api/project/:id
+router.delete('/:id', async (req, res) => {
   try {
-    const {namespaceId, id} = req.body
-
-    if (!namespaceId) {
-      return res.status(400).json({ message: 'Не выбрано объединение' })
-    }
+    const {id} = req.params
 
     if (!id) {
       return res.status(400).json({ message: 'Не выбран проект' })
     }
 
+    const {namespaceId} = await Project.findById(id)
+
     await Project.findOneAndDelete({ _id: id}, async err => {
       if (!err) {
-        await Namespace.update({ _id: namespaceId}, {
-          '$pull': {
-            projects: id
-          }
-        })
+        if (namespaceId) {
+          await Namespace.update({ _id: namespaceId}, {
+            '$pull': {
+              projects: id
+            }
+          })
+        }
         res.status(200).json({ message: 'Проект удален' })
       } else {
         res.status(400).json({ message: `Произошла ошибка ${err}` })
@@ -94,5 +88,19 @@ router.post('/remove', async (req, res) => {
     res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
   }
 })
+
+// router.get('/:id', async (req, res) => {
+//   try {
+//     const {id} = req.params
+//
+//     const {namespace} = await Project.findById(id)
+//
+//     res.status(200).json(namespace)
+//   } catch (e) {
+//     console.log(e)
+//     res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
+//   }
+//
+// })
 
 module.exports = router

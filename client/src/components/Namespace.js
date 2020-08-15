@@ -1,22 +1,20 @@
-import React, {useEffect, useState} from 'react';
-import '../styles/nameapce.scss'
-import {useHttp} from '../hooks/http.hook';
-import {useMessage} from '../hooks/message.hook';
+import React from 'react';
+import '../styles/namespace.scss'
 
 function Namespace({namespace}) {
-  const [active, setActive] = useState(false)
-
   return (
-    <div className="namespace">
-      <div className="namespace-title" onClick={() => setActive(!active)}>
+    <li>
+      <div className="collapsible-header">
+        <i className="material-icons">keyboard_arrow_right</i>
         {namespace.name}
       </div>
-      <ul className={ active ? 'project-list active' : 'project-list'}>
+      <div className="collapsible-body">
+        { !namespace.projects.length && 'Проектов нет' }
         { namespace.projects.map(project => (
-          <li className="project-list-item" key={project._id}>{project.name}</li>
-        )) }
-      </ul>
-    </div>
+           <div data-item="project" data-id={project._id} key={project._id}>{project.name}</div>
+         )) }
+      </div>
+    </li>
   )
 }
 

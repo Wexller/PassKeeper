@@ -1,0 +1,72 @@
+@import "variables";
+
+.copy-text {
+  cursor: pointer;
+  transition: color .3s linear;
+  position: relative;
+
+  .copy-done {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translate(100%, -50%);
+    opacity: 0;
+    transition: opacity .3s linear;
+    cursor: default;
+  }
+
+  &.copied {
+    .copy-done {
+      opacity: 1;
+    }
+  }
+}
+
+.case-remove, .case-edit {
+  transition: color .3s linear;
+  cursor: pointer;
+  user-select: none;
+}
+
+.case-remove {
+  &:hover {
+    color: #f44336;
+  }
+
+  &.clicked {
+    pointer-events: none;
+    cursor: auto;
+    color: #888;
+  }
+}
+
+.case-edit:hover {
+  color: $mainColor;
+}
+
+.case-action {
+  display: flex;
+  justify-content: space-between;
+}
+
+.show-password {
+  position: absolute;
+  right: .5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  user-select: none;
+
+  transition: color .3s linear;
+  cursor: pointer;
+
+  &:hover,
+  &.active {
+    color: $mainColor;
+  }
+}
+
+.open-link {
+  display: flex;
+  align-items: center;
+  max-width: max-content;
+}

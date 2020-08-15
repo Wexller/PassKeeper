@@ -1,0 +1,25 @@
+.collapsible {
+  li {
+    .material-icons {
+      transition: transform .2s linear;
+    }
+
+    &.active {
+      .material-icons {
+        transform: rotate(90deg);
+      }
+    }
+  }
+}
+
+.collapsible-body {
+  padding: 1rem;
+
+  div {
+    cursor: pointer;
+  }
+}
+
+.collapsible-header {
+  padding: .5rem;
+}

@@ -1,20 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import Modal from 'react-modal'
+import Modal from 'react-modal';
 import {useMessage} from '../hooks/message.hook';
 import {useHttp} from '../hooks/http.hook';
-
-const customStyles = {
-  content: {
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)',
-    minWidth: '500px',
-    minHeight: '300px',
-  }
-};
+import {modalStyles} from '../constants';
 
 function ProjectControl({updateList, namespaces, contentLoading}) {
   const {loading, request, error, clearError} = useHttp()
@@ -49,9 +37,8 @@ function ProjectControl({updateList, namespaces, contentLoading}) {
           event => setProjectAdd({...projectAdd, namespaceId: event.target.value}))}
 
         <div className="row valign-wrapper" style={{paddingBottom: '2rem'}}>
-          <div className="input-field col s8" style={{marginTop: 0, marginBottom: 0}}>
+          <div className="input-field col s8">
             <input
-              id="namespace-name"
               name="name"
               type="text"
               placeholder="Название проекта"
@@ -132,7 +119,7 @@ function ProjectControl({updateList, namespaces, contentLoading}) {
   async function addNewProject(event) {
     event.preventDefault()
     try {
-      const data = await request('http://localhost:5000/api/project/new', 'POST', {...projectAdd})
+      const data = await request('http://localhost:5000/api/project/', 'POST', {...projectAdd})
       message(data.message)
       setProjectAdd({...projectAdd, projectName: ''})
       updateList()
@@ -142,7 +129,7 @@ function ProjectControl({updateList, namespaces, contentLoading}) {
   async function removeProject(event) {
     event.preventDefault()
     try {
-      const data = await request('http://localhost:5000/api/project/remove', 'POST', {...projectRemove})
+      const data = await request('http://localhost:5000/api/project/', 'DELETE', {...projectRemove})
       message(data.message)
       updateList()
 
@@ -159,11 +146,6 @@ function ProjectControl({updateList, namespaces, contentLoading}) {
     setModalIsOpen(false)
   }
 
-  function afterOpenModal() {
-    // references are now sync'd and can be accessed.
-    // subtitle.style.color = '#f00';
-  }
-
   function toggleDisplayedForm() {
     setDisplayAddForm(!displayAddForm)
   }
@@ -171,15 +153,14 @@ function ProjectControl({updateList, namespaces, contentLoading}) {
   return (
     <>
       <button
-        className="btn col s4 offset-l1 offset-r1"
+        className="btn col s5 offset-l1"
         onClick={openModal}
         disabled={contentLoading}>Проекты</button>
       <Modal
         isOpen={modalIsOpen}
-        onAfterOpen={afterOpenModal}
         onRequestClose={closeModal}
-        style={customStyles}
-        contentLabel="Example Modal"
+        style={modalStyles}
+        contentLabel="Управление проектами"
       >
         <div className="modalTitle">Управление проектами</div>
         <div style={{margin: '1rem 0'}}>
