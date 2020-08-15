@@ -1,5 +1,6 @@
 {
   "port": 5000,
   "jwtSecret": "random secret key",
-  "mongoUri": "mongodb+srv://mongo_url"
+  "mongoUri": "mongodb+srv://mongo_url",
+  "encryption_key": "nQtXLSR)D*AL82uUN_S5qj9J5@LFmpQy"
 }

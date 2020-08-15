@@ -88,7 +88,8 @@ function CaseList({caseList, getCases}) {
   async function removeCase(caseId) {
     try {
       if (caseId) {
-        await request(`http://localhost:5000/api/case/${caseId}`, 'DELETE')
+        const data = await request(`http://localhost:5000/api/case/${caseId}`, 'DELETE')
+        message(data.message)
         getCases()
       }
     } catch (e) {
