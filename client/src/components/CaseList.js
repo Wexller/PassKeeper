@@ -41,7 +41,7 @@ function CaseList({caseList, getCases}) {
   async function updateCase(event) {
     event.preventDefault()
     try {
-      const data = await request(`http://localhost:5000/api/case/${caseId}`, 'PUT', {...caseForm})
+      const data = await request(`/api/case/${caseId}`, 'PUT', {...caseForm})
       message(data.message)
       getCases()
     } catch (e) {}
@@ -71,8 +71,11 @@ function CaseList({caseList, getCases}) {
       openModal()
 
     } else if ($el.dataset['type'] === 'remove') {
-      $el.classList.add('clicked')
-      removeCase($el.dataset['id']).then()
+      const isConfirmed = window.confirm('Удалить Кейс?')
+      if (isConfirmed) {
+        $el.classList.add('clicked')
+        removeCase($el.dataset['id']).then()
+      }
 
     } else if ($el.dataset['type'] === 'open') {
       let url = $el.dataset['link']
@@ -88,7 +91,7 @@ function CaseList({caseList, getCases}) {
   async function removeCase(caseId) {
     try {
       if (caseId) {
-        const data = await request(`http://localhost:5000/api/case/${caseId}`, 'DELETE')
+        const data = await request(`/api/case/${caseId}`, 'DELETE')
         message(data.message)
         getCases()
       }

@@ -1,16 +1,16 @@
 const {Router} = require('express')
-// const bcrypt = require('bcryptjs')
-// const config = require('config')
 const {check, validationResult} = require('express-validator')
 const Namespace = require('../models/Namespace')
 const Project = require('../models/Project')
 const Case = require('../models/Case')
+const User = require('../models/User')
 const router = Router()
+const auth = require('../middleware/auth.middleware')
 
 // GET /api/namespace
-router.get('/', async (req, res) => {
+router.get('/', auth, async (req, res) => {
   try {
-    const namespaces = await Namespace.find()
+    const namespaces = await Namespace.find({ users: req.user['userId'] })
 
     const projectIds = namespaces.reduce((prev, curr) => {
       prev.push(...curr.projects)
@@ -54,10 +54,12 @@ router.get('/', async (req, res) => {
 
 // POST /api/namespace
 router.post('/', [
-  check('name').exists()
+  check('name').exists(),
+  auth
 ], async (req, res) => {
   try {
     const errors = validationResult(req)
+    const { userId } = req.user
 
     if (!errors.isEmpty()) {
       return res.status(400).json({
@@ -74,8 +76,10 @@ router.post('/', [
       return res.status(400).json({ message: 'Такое объединение уже существует' })
     }
 
-    const namespace = new Namespace({name})
-    await namespace.save()
+    const namespace = new Namespace({name, users: [userId]})
+    await namespace.save( async (err, saved) => {
+      await User.findByIdAndUpdate(userId, {'$push': { namespaces: saved._id }})
+    })
 
     res.status(201).json({ message: 'Объединение создано' })
   } catch (e) {

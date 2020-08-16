@@ -25,7 +25,7 @@ function Body() {
   const getCases = useCallback(async () => {
     if (currentProjectId) {
       try {
-        const cases = await request(`http://localhost:5000/api/case/${currentProjectId}`)
+        const cases = await request(`/api/case/${currentProjectId}`)
         setCaseList(cases)
       } catch (e) {}
     }

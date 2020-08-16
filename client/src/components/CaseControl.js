@@ -41,7 +41,7 @@ function CaseControl({projectId, getCases}) {
   async function addNewCase(event) {
     event.preventDefault()
     try {
-      const data = await request('http://localhost:5000/api/case', 'POST', {...caseForm, projectId})
+      const data = await request('/api/case', 'POST', {...caseForm, projectId})
       setCaseForm({
         login: '',
         password: '',

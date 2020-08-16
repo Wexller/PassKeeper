@@ -119,7 +119,7 @@ function ProjectControl({updateList, namespaces, contentLoading}) {
   async function addNewProject(event) {
     event.preventDefault()
     try {
-      const data = await request('http://localhost:5000/api/project/', 'POST', {...projectAdd})
+      const data = await request('/api/project/', 'POST', {...projectAdd})
       message(data.message)
       setProjectAdd({...projectAdd, projectName: ''})
       updateList()
@@ -129,7 +129,7 @@ function ProjectControl({updateList, namespaces, contentLoading}) {
   async function removeProject(event) {
     event.preventDefault()
     try {
-      const data = await request('http://localhost:5000/api/project/', 'DELETE', {...projectRemove})
+      const data = await request('/api/project/', 'DELETE', {...projectRemove})
       message(data.message)
       updateList()
 

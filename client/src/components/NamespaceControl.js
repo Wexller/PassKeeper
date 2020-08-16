@@ -1,12 +1,14 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import Modal from 'react-modal';
 import {useMessage} from '../hooks/message.hook';
 import {useHttp} from '../hooks/http.hook';
 import {modalStyles} from '../constants';
+import {AuthContext} from '../context/AuthContext';
 
 function NamespaceControl({updateList, namespaces, contentLoading}) {
   const {loading, request, error, clearError} = useHttp()
   const message = useMessage()
+  const {token} = useContext(AuthContext)
 
   useEffect(() => {
     message(error)
@@ -86,7 +88,9 @@ function NamespaceControl({updateList, namespaces, contentLoading}) {
   async function addNewNamespace(event) {
     event.preventDefault()
     try {
-      const data = await request('http://localhost:5000/api/namespace/', 'POST', {name: namespaceAddName})
+      const data = await request('/api/namespace/', 'POST', {name: namespaceAddName}, {
+        Authorization: `Bearer ${token}`
+      })
       message(data.message)
       setNamespaceAddName('')
       updateList()
@@ -96,7 +100,7 @@ function NamespaceControl({updateList, namespaces, contentLoading}) {
   async function removeNamespace(event) {
     event.preventDefault()
     try {
-      const data = await request(`http://localhost:5000/api/namespace/${namespaceRemoveId}`, 'DELETE')
+      const data = await request(`/api/namespace/${namespaceRemoveId}`, 'DELETE')
       message(data.message)
       setNamespaceRemoveId('')
       updateList()
